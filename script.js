@@ -1,30 +1,47 @@
 const video = document.querySelector("#heroVideo");
+
 let duration = 0;
-let frameId = null;
+let targetTime = 0;
+let animationFrame = null;
 let primed = false;
 
-function syncVideoToPage() {
+function pageProgress() {
   const maxScroll = Math.max(
     1,
     document.documentElement.scrollHeight - window.innerHeight
   );
-  const progress = Math.min(1, Math.max(0, window.scrollY / maxScroll));
 
-  if (duration > 0 && Number.isFinite(duration) && video.readyState >= 2) {
-    const safeEnd = Math.max(0, duration - 0.05);
-    const targetTime = progress * safeEnd;
-
-    if (Math.abs(video.currentTime - targetTime) > 0.015) {
-      video.currentTime = targetTime;
-    }
-  }
-
-  frameId = null;
+  return Math.min(1, Math.max(0, window.scrollY / maxScroll));
 }
 
-function requestVideoSync() {
-  if (frameId === null) {
-    frameId = requestAnimationFrame(syncVideoToPage);
+function updateTargetTime() {
+  if (duration > 0 && Number.isFinite(duration)) {
+    targetTime = pageProgress() * Math.max(0, duration - 0.05);
+  }
+
+  startSmoothScrub();
+}
+
+function smoothScrub() {
+  animationFrame = null;
+
+  if (duration <= 0 || video.readyState < 2) return;
+
+  const difference = targetTime - video.currentTime;
+
+  if (Math.abs(difference) <= 0.008) {
+    video.currentTime = targetTime;
+    return;
+  }
+
+  const easing = Math.min(0.24, 0.12 + Math.abs(difference) * 0.025);
+  video.currentTime += difference * easing;
+  animationFrame = requestAnimationFrame(smoothScrub);
+}
+
+function startSmoothScrub() {
+  if (animationFrame === null) {
+    animationFrame = requestAnimationFrame(smoothScrub);
   }
 }
 
@@ -40,28 +57,28 @@ async function primeVideoFrame() {
     video.pause();
   }
 
-  requestVideoSync();
+  updateTargetTime();
 }
 
 video.addEventListener("loadedmetadata", () => {
   duration = video.duration || 0;
-  requestVideoSync();
+  updateTargetTime();
 });
 
 video.addEventListener("loadeddata", primeVideoFrame, { once: true });
 
 video.addEventListener("durationchange", () => {
   duration = video.duration || duration;
-  requestVideoSync();
+  updateTargetTime();
 });
 
 video.addEventListener("error", () => {
   console.error("Background video could not be loaded:", video.error);
 });
 
-window.addEventListener("scroll", requestVideoSync, { passive: true });
-window.addEventListener("resize", requestVideoSync);
-window.addEventListener("load", requestVideoSync);
+window.addEventListener("scroll", updateTargetTime, { passive: true });
+window.addEventListener("resize", updateTargetTime);
+window.addEventListener("load", updateTargetTime);
 
 video.load();
-requestVideoSync();
+updateTargetTime();
