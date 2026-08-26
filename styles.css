@@ -65,7 +65,7 @@ footer {
 
 .nav {
   height: 104px;
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
@@ -274,8 +274,8 @@ h2 {
 }
 
 .capabilities article {
-  min-height: 310px;
-  padding: 1.4rem;
+  min-height: 230px;
+  padding: 1.25rem;
   display: flex;
   flex-direction: column;
   border: 1px solid var(--line);
@@ -283,13 +283,33 @@ h2 {
   backdrop-filter: blur(8px);
 }
 
-.capabilities span {
+.capability-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.capability-top span {
   font: .72rem "DM Mono", monospace;
 }
 
+.capability-top svg {
+  width: 44px;
+  height: 44px;
+  padding: 8px;
+  border-radius: 50%;
+  color: var(--cyan);
+  background: rgba(88, 229, 250, .09);
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
 .capabilities h3 {
-  margin: auto 0 1rem;
-  font-size: 1.8rem;
+  margin: 2.25rem 0 .75rem;
+  font-size: 1.55rem;
   line-height: 1.02;
   letter-spacing: -.06em;
 }
@@ -302,33 +322,57 @@ h2 {
 }
 
 .stack {
-  grid-column: 2;
-  display: flex;
-  flex-wrap: wrap;
-  gap: .6rem;
-  margin-top: -1rem;
+  grid-column: 1 / -1;
+  width: calc(100% + 10vw);
+  margin: 3.5rem 0 -4rem -5vw;
+  overflow: hidden;
+  border-top: 1px solid rgba(255, 255, 255, .14);
+  border-bottom: 1px solid rgba(255, 255, 255, .14);
+  background: rgba(3, 10, 20, .2);
 }
 
-.stack span {
-  min-height: 38px;
-  padding: .55rem .8rem;
+.stack-track {
+  width: max-content;
+  display: flex;
+  padding: 1.3rem 0;
+  animation: skills-left-to-right 28s linear infinite;
+  will-change: transform;
+}
+
+.stack-set {
+  display: flex;
+  align-items: center;
+  gap: 2.8rem;
+  padding-right: 2.8rem;
+}
+
+.stack-set span {
   display: inline-flex;
   align-items: center;
-  gap: .5rem;
-  border: 1px solid var(--line);
-  background: rgba(3, 10, 20, .36);
-  font: .75rem "DM Mono", monospace;
+  gap: .65rem;
+  white-space: nowrap;
+  color: rgba(255, 255, 255, .9);
+  font: .78rem "DM Mono", monospace;
 }
 
-.stack .language-chip {
-  border-color: rgba(88, 229, 250, .42);
-  background: rgba(3, 14, 26, .58);
-}
-
-.language-chip img {
-  width: 21px;
-  height: 21px;
+.stack-set img {
+  width: 28px;
+  height: 28px;
   object-fit: contain;
+}
+
+.stack-set .next-logo { filter: invert(1); }
+
+@keyframes skills-left-to-right {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stack-track {
+    animation: none;
+    transform: none;
+  }
 }
 
 .work {
@@ -495,7 +539,13 @@ footer {
   .capabilities { grid-template-columns: 1fr; }
   .capabilities article { min-height: 210px; }
 
-  .stack { margin-top: 1.5rem; }
+  .stack {
+    width: calc(100% + 2.5rem);
+    margin: 2.5rem 0 -2rem -1.25rem;
+  }
+
+  .stack-track { animation-duration: 22s; }
+  .stack-set { gap: 2rem; padding-right: 2rem; }
 
   .project {
     grid-template-columns: 32px 1fr 18px;
