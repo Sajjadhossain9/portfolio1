@@ -12,10 +12,7 @@
 </head>
 <body>
   <header class="nav">
-    <a class="brand" href="#top" aria-label="Back to top">
-      <img src="assets/sajjad-profile.webp" alt="Sajjad Hossain" />
-      <span>SAJJAD HOSSAIN</span>
-    </a>
+    <a class="brand" href="#top" aria-label="Back to top">SAJJAD HOSSAIN</a>
     <nav aria-label="Main navigation">
       <a href="#about">Profile</a>
       <a href="#expertise">Experience</a>
@@ -26,13 +23,14 @@
   </header>
 
   <main id="top">
+  <div class="video-wrap" aria-hidden="true">
+    <video id="heroVideo" muted playsinline preload="auto">
+      <source src="assets/hero-video.mp4" type="video/mp4">
+    </video>
+    <div class="video-shade"></div>
+  </div>
+
     <section class="hero" aria-label="Introduction">
-      <div class="video-wrap" aria-hidden="true">
-        <video id="heroVideo" muted playsinline preload="metadata" poster="assets/hero-poster.jpg">
-          <source src="assets/hero-video.mp4" type="video/mp4">
-        </video>
-        <div class="video-shade"></div>
-      </div>
       <div class="hero-content">
         <p class="eyebrow">Full-stack developer · UI/UX designer</p>
         <h1>Building digital<br><em>experiences</em> that work.</h1>
